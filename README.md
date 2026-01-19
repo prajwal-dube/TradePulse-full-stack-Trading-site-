@@ -19,8 +19,8 @@ The project emphasizes **modular design**, **maintainable code structure**, and 
 
 ## 🏗️ Project Structure
 
-TradePulse-full-stack-Trading-site/ <br>
-│
+TradePulse-full-stack-Trading-site/ 
+│ <br>
 ├── Frontend/ # React-based marketing & onboarding website <br>
 ├── dashboard/ # Trading dashboard UI (holdings, orders, charts) <br>
 ├── Forntend/ # Backend (Node.js) – models & schemas  <br>
