@@ -21,14 +21,12 @@ The project emphasizes **modular design**, **maintainable code structure**, and 
 
 TradePulse-full-stack-Trading-site/
 │
-├── Frontend/ # React-based marketing & onboarding website
-├── dashboard/ # Trading dashboard UI (holdings, orders, charts)
-├── Forntend/ # Backend (Node.js) – models & schemas
+├── Frontend/ # React-based marketing & onboarding website <br>
+├── dashboard/ # Trading dashboard UI (holdings, orders, charts) <br>
+├── Forntend/ # Backend (Node.js) – models & schemas  <br>
 └── .gitignore
 
 
-
-> Note: The backend folder name `Forntend` is retained as-is from development.
 
 ---
 
