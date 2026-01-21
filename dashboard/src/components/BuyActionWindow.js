@@ -16,7 +16,7 @@ const BuyActionWindow = ({ uid }) => {
 
   // Buy Button logic
   const handleBuyClick = () => {
-    axios.post("http://localhost:3002/newOrder", {
+    axios.post("https://tradepulse-backend-env.eba-qk2njbrz.ap-south-1.elasticbeanstalk.com/newOrder", {
       name: uid,
       qty: stockQuantity,
       price: stockPrice,
