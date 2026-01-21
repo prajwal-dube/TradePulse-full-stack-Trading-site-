@@ -20,6 +20,10 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+app.get("/", (req, res) => {
+  res.send("TradePulse backend is running");
+});
+
 
 // Adding holdings data to  collection (Mongoose) like Dummy Data . 
 // app.get("/addHoldings",async(req, res) => {
