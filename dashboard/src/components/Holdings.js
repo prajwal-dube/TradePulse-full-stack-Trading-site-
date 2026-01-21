@@ -17,7 +17,9 @@ const Holdings = () => {
 
 
   // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-  const labels = allHoldings.map((subArray) => subArray["name"]);
+
+  // Adding Data to Holding Graph
+  const labels = allHoldings.map((subArray) => subArray["name"]); 
 
   const data = {
     labels,
@@ -25,26 +27,29 @@ const Holdings = () => {
       {
         label: "Stock Price",
         data: allHoldings.map((stock) => stock.price),
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
       },
     ],
   };
 
   // export const data = {
-  //   labels,
-  //   datasets: [
-  // {
-  //   label: 'Dataset 1',
-  //   data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-  //   backgroundColor: 'rgba(255, 99, 132, 0.5)',
-  // },
-  //     {
-  //       label: 'Dataset 2',
-  //       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-  //       backgroundColor: 'rgba(53, 162, 235, 0.5)',
-  //     },
-  //   ],
-  // };
+  //     labels,
+  //     datasets: [
+  //       {
+  //         label: 'Dataset 1',
+  //         data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+  //         backgroundColor: 'rgba(255, 99, 132, 0.5)',
+  //       },
+  //       {
+  //         label: 'Dataset 2',
+  //         data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+  //         backgroundColor: 'rgba(53, 162, 235, 0.5)',
+  //       },
+  //     ],
+  //   };
+
+
+
 
   return (
     <>

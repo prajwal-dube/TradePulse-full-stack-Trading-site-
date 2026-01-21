@@ -27,7 +27,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: "Holdings",
+      text: "Holdings Chart",
     },
   },
 };
