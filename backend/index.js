@@ -11,7 +11,7 @@ const {PositionsModel} = require('./model/PositionsModel');
 const {OrdersModel} = require('./model/OrdersModel');
 
 
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT;
 const URL = process.env.MONGO_URL;
 
 
@@ -357,14 +357,15 @@ app.post("/newOrder", async(req,res) => {
 
 
 
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 mongoose.connect(URL)
   .then(() => {
-    console.log('✅ Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`✅ Server running on port ${PORT}`);
-    });
+    console.log("Connected to MongoDB");
   })
   .catch(err => {
-    console.error('❌ MongoDB connection error:', err);
-    process.exit(1);
+    console.error("Mongo error:", err);
   });
+
