@@ -8,7 +8,7 @@ const Orders = () => {
   const [allOrders, setAllOrders] = useState([]);
 
   useEffect(() => {
-    axios.get("https://tradepulse-backend-env.eba-qk2njbrz.ap-south-1.elasticbeanstalk.com/allOrders").then((res) => {
+    axios.get("http://tradepulse-backend-env.eba-qk2njbrz.ap-south-1.elasticbeanstalk.com/allOrders").then((res) => {
       // console.log(res.data);
       setAllOrders(res.data);
     });
