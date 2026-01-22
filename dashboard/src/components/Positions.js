@@ -11,7 +11,7 @@ const Positions = () => {
   const [allPositions, setAllPositions] = useState([]);
 
   useEffect(() => {
-    axios.get("http://tradepulse-backend-env.eba-qk2njbrz.ap-south-1.elasticbeanstalk.com/allPositions").then((res) => {
+    axios.get("https://baseline-tcp-much-nor.trycloudflare.com/allPositions").then((res) => {
       setAllPositions(res.data);
     });
   },[]);

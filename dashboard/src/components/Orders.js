@@ -7,8 +7,11 @@ import axios from "axios";
 const Orders = () => {
   const [allOrders, setAllOrders] = useState([]);
 
+// https://baseline-tcp-much-nor.trycloudflare.com
+
+
   useEffect(() => {
-    axios.get("http://tradepulse-backend-env.eba-qk2njbrz.ap-south-1.elasticbeanstalk.com/allOrders").then((res) => {
+    axios.get("https://baseline-tcp-much-nor.trycloudflare.com/allOrders").then((res) => {
       // console.log(res.data);
       setAllOrders(res.data);
     });
