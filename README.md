@@ -1,108 +1,227 @@
-# TradePulse – Full Stack Trading Platform
-
-TradePulse is a full-stack trading platform designed to simulate core functionalities of a modern stock trading system. The project focuses on clean software architecture by separating the application into **frontend**, **backend**, and **dashboard** modules, reflecting real-world engineering practices.
-
----
+# TradePulse 🚀  
+*A Full‑Stack Trading Platform (Frontend + Dashboard + Backend)*
 
 ## 📌 Project Overview
+**TradePulse** is a full‑stack trading platform inspired by modern stock‑trading applications.  
+The project is structured into **three major parts**:
 
-TradePulse is built to model essential trading concepts such as:
-- Orders
-- Holdings
-- Positions
-- Watchlists
-- Trading dashboards and visualizations
+1. **Frontend (Public Website)** – Marketing & landing pages  
+2. **Dashboard (Authenticated Area)** – Trading dashboard UI  
+3. **Backend (API + Database)** – Business logic & data handling  
 
-The project emphasizes **modular design**, **maintainable code structure**, and **clear separation of concerns**, making it suitable as a software engineering project rather than just a UI demo.
-
----
-
-## 🏗️ Project Structure
-
-TradePulse-full-stack-Trading-site/ 
-│ <br>
-├── Frontend/ # React-based marketing & onboarding website <br>
-├── dashboard/ # Trading dashboard UI (holdings, orders, charts) <br>
-├── Forntend/ # Backend (Node.js) – models & schemas  <br>
-└── .gitignore <br>
-
-
+The goal of this project was to **understand real‑world full‑stack architecture**, clean component design, and backend‑frontend communication — not just make pages work.
 
 ---
 
-## ⚙️ Tech Stack
+## 🧠 Architecture (High Level)
 
-### Frontend
-- React
-- JavaScript
-- HTML, CSS
-- Component-based UI design
+```
+TradePulse
+│
+├── frontend   → Public landing website (React)
+├── dashboard  → Trading dashboard UI (React)
+├── backend    → REST API + DB models (Node.js, Express)
+```
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend (Landing Website)
+- React.js
+- CSS (custom styling)
+- Font Awesome (icons)
+- Component‑based architecture
 
 ### Dashboard
-- React
-- Context API for state management
-- Chart visualizations (Doughnut & Graph charts)
-- Modular dashboard components
+- React.js
+- Context API (state management)
+- Reusable UI components
+- Charts & visualizations
+- Modular folder structure
 
 ### Backend
 - Node.js
-- JavaScript
-- Data models and schemas for:
-  - Orders
-  - Holdings
-  - Positions
+- Express.js
+- MongoDB (Schema‑based design)
+- REST APIs
+
+### Testing
+- Jest
+- React Testing Library
 
 ---
 
-## ✨ Key Features
+## 📂 Folder Structure Explained
 
-### Frontend
-- Multi-page product website (Home, Pricing, About, Support, Signup)
-- Reusable UI components (Navbar, Footer, Hero sections)
-- Responsive layout and structured styling
+### 🔹 `frontend/`
+Public website visible to all users.
 
-### Dashboard
-- Holdings, Orders, and Positions views
-- Watchlist management
-- Buy window component
-- Interactive charts and visual summaries
-- Centralized application state using context
+Key folders:
+- `landing_page/` – Home, About, Pricing, Products, Support, Signup
+- `media/` – Images & assets
+- `tests/` – Component testing
 
-### Backend
-- Structured data models for trading entities
-- Schema-based design aligned with real trading workflows
-- Clear separation between data definition and application logic
-
----
-
-## 🚧 Project Status
-
-- Frontend: ✅ Implemented  
-- Dashboard: ✅ Implemented  
-- Backend Models & Schemas: ✅ Implemented  
-- API integration & deployment: 🚧 In progress  
-
-This project is currently **under active development**, with future plans to integrate backend APIs fully and deploy the platform.
+Example:
+```
+frontend/src/
+├── landing_page/
+│   ├── home/
+│   ├── about/
+│   ├── pricing/
+│   ├── products/
+│   ├── support/
+│   └── signup/
+└── tests/
+    └── Hero.test.js
+```
 
 ---
 
-## 🎯 Learning Outcomes
+### 🔹 `dashboard/`
+User dashboard after sign‑in.
 
-- Designed a **multi-module full-stack application**
-- Gained hands-on experience with **React component architecture**
-- Applied **software engineering principles** such as modularity and separation of concerns
-- Modeled real-world trading data structures
-- Built interactive dashboards and visualizations
+Key components:
+- Holdings
+- Orders
+- Positions
+- Watchlist
+- Funds
+- Charts (Doughnut, Vertical Graph)
+- Buy/Sell action window
+
+Important files:
+```
+dashboard/src/components/
+├── Dashboard.js
+├── Holdings.js
+├── Orders.js
+├── Positions.js
+├── WatchList.js
+├── Funds.js
+├── DoughnoutChart.js
+├── VerticalGraph.js
+└── BuyActionWindow.js
+```
+
+State Management:
+- `GeneralContext.js` (React Context API)
 
 ---
 
-## 📎 Disclaimer
+### 🔹 `backend/`
+Handles data & business logic.
 
-TradePulse is a **learning and educational project** and is not intended for real financial transactions or production trading use.
+#### Models
+```
+backend/model/
+├── HoldingsModel.js
+├── OrdersModel.js
+└── PositionsModel.js
+```
+
+#### Schemas
+```
+backend/schemas/
+├── HoldingsSchema.js
+├── OrdersSchema.js
+└── PostionsSchema.js
+```
+
+Backend handles:
+- Holdings data
+- Order management
+- Position tracking
 
 ---
 
-## 👤 Author
+## 🧪 Testing
 
-**Prajwal Manoj Dube**  
-GitHub: https://github.com/prajwal-dube  
+Testing is implemented for frontend components using:
+- **Jest**
+- **React Testing Library**
+
+Example test:
+```
+frontend/src/tests/Hero.test.js
+```
+
+Purpose:
+- Ensure UI renders correctly
+- Protect against UI regressions
+- Improve maintainability
+
+---
+
+## ⚙️ How to Run the Project
+
+### 1️⃣ Clone the Repository
+```bash
+git clone <repo-url>
+cd TradePulse
+```
+
+---
+
+### 2️⃣ Backend Setup
+```bash
+cd backend
+npm install
+npm start
+```
+
+Server runs on:
+```
+http://localhost:3002
+```
+
+---
+
+### 3️⃣ Frontend (Landing Page)
+```bash
+cd frontend
+npm install
+npm start
+```
+
+Runs on:
+```
+http://localhost:3000
+```
+
+---
+
+### 4️⃣ Dashboard
+```bash
+cd dashboard
+npm install
+npm start
+```
+
+---
+
+## 🔑 Key Learnings
+
+- Real‑world full‑stack folder separation
+- Component reusability in React
+- Context API for global state
+- Backend schema‑driven design
+- Writing basic frontend tests
+- Clean project structuring
+
+---
+
+## 📈 Future Improvements
+
+- Authentication (JWT‑based login/signup)
+- User‑specific dashboard data
+- Backend validation & middleware
+- More unit & integration tests
+- Deployment (AWS / Vercel)
+
+---
+
+## 👨‍💻 Author
+**Prajwal**
+
+Project Link : https://main.dij7mn1c1xwl5.amplifyapp.com/
