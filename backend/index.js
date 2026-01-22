@@ -357,14 +357,17 @@ app.post("/newOrder", async(req,res) => {
 
 
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
 
 mongoose.connect(URL)
   .then(() => {
     console.log("Connected to MongoDB");
+
+    app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    });
   })
+ 
   .catch(err => {
     console.error("Mongo error:", err);
   });
