@@ -7,12 +7,14 @@ import { VerticalGraph } from "./VerticalGraph";
 
 // Backend Link : tradepulse-backend-env.eba-qk2njbrz.ap-south-1.elasticbeanstalk.com
 // https://baseline-tcp-much-nor.trycloudflare.com
+// Backend ( Railway ) : https://api.puls3.tech
+
 
 
 const Holdings = () => {
   const [allHoldings, setAllHoldings] = useState([]);
   useEffect(() => {
-    axios.get("https://baseline-tcp-much-nor.trycloudflare.com/allHoldings").then((res) => {
+    axios.get("https://api.puls3.tech/allHoldings").then((res) => {
       // console.log(res.data);
       setAllHoldings(res.data);
     });

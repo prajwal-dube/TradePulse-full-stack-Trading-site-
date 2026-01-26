@@ -16,7 +16,7 @@ const BuyActionWindow = ({ uid }) => {
 
   // Buy Button logic
   const handleBuyClick = () => {
-    axios.post("https://baseline-tcp-much-nor.trycloudflare.com/newOrder", {
+    axios.post("https://api.puls3.tech/newOrder", {
       name: uid,
       qty: stockQuantity,
       price: stockPrice,

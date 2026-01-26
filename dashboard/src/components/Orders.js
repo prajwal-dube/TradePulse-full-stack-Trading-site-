@@ -8,10 +8,10 @@ const Orders = () => {
   const [allOrders, setAllOrders] = useState([]);
 
 // https://baseline-tcp-much-nor.trycloudflare.com
-
+// Backend ( Railway ) : https://api.puls3.tech
 
   useEffect(() => {
-    axios.get("https://baseline-tcp-much-nor.trycloudflare.com/allOrders").then((res) => {
+    axios.get("https://api.puls3.tech/allOrders").then((res) => {
       // console.log(res.data);
       setAllOrders(res.data);
     });

@@ -10,8 +10,9 @@ const Positions = () => {
 
   const [allPositions, setAllPositions] = useState([]);
 
+  // Backend ( Railway ) : https://api.puls3.tech
   useEffect(() => {
-    axios.get("https://baseline-tcp-much-nor.trycloudflare.com/allPositions").then((res) => {
+    axios.get("https://api.puls3.tech/allPositions").then((res) => {
       setAllPositions(res.data);
     });
   },[]);
