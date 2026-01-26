@@ -1,4 +1,5 @@
 {
+  "proxy": "http://tradepulse-backend-env.eba-qk2njbrz.ap-south-1.elasticbeanstalk.com",
   "name": "dashboard",
   "version": "0.1.0",
   "private": true,
