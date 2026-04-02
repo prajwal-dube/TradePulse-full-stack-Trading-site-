@@ -225,3 +225,10 @@ npm start
 **Prajwal**
 
 Project Link : https://main.dij7mn1c1xwl5.amplifyapp.com/
+
+
+## Resume Poimts
+- Full-Stack Trading Platform: Built a 3-tier React/Node.js architecture with Context API for real-time state management across 10+ dashboard components.
+- Data Modeling & API: Designed structured MongoDB schemas and RESTful APIs to manage high-integrity tracking of user holdings, orders, and positions.
+- Automated Testing: Developed a comprehensive test suite using Jest and React Testing Library to ensure UI stability and prevent regressions.
+- Cloud Deployment: Deployed a high-availability frontend and dashboard using AWS Amplify, implementing automated build-and-deploy workflows via GitHub integration.
