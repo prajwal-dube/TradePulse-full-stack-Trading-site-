@@ -243,17 +243,19 @@ In the local Create React App production build, the gzipped main JavaScript bund
 npm test --prefix backend
 ```
 
-Start the backend with a test MongoDB database and `PORT=3002`, then run the same benchmark settings against the baseline and optimized versions:
+Use a non-production test database and `PORT=3002`. Keep the feature-branch checkout available to run the benchmark script; start the baseline `main` server first, save a `before.json` result, then start the feature-branch server and save an `after.json` result. Use the same dataset and benchmark settings for both runs:
 
 ```powershell
 $env:BASE_URL = "http://localhost:3002"
 $env:ENDPOINT = "/allHoldings?limit=100"
 $env:CONCURRENCY = "10"
 $env:DURATION_SECONDS = "15"
-$env:LABEL = "after"
-$env:RESULT_FILE = "after.json"
+$env:LABEL = "before"
+$env:RESULT_FILE = "before.json"
 npm run benchmark --prefix backend
 ```
+
+For the second run, change `LABEL` to `"after"` and `RESULT_FILE` to `"after.json"`.
 
 The benchmark only targets loopback by default. Remote hosts require the explicit `ALLOW_REMOTE_TARGET=true` opt-in; only load-test systems you own or have permission to test. Keep the dataset, machine, endpoint, concurrency, and duration the same for both runs. The baseline implementation returns the full holdings collection, while this branch limits the page; compare the response size and p95 latency as part of that bounded-read change. The script reports measurements but does not invent a before/after comparison. No API latency or throughput improvement numbers have been recorded yet; collect and verify them before adding those claims to a resume.
 
