@@ -267,3 +267,9 @@ To capture a Node.js CPU profile, run `npm run profile --prefix backend` and sto
 - Automated Testing: Developed a comprehensive test suite using Jest and React Testing Library to ensure UI stability and prevent regressions.
 - Cloud Deployment: Deployed a high-availability frontend and dashboard using AWS Amplify, implementing automated build-and-deploy workflows via GitHub integration.
 - Performance Engineering: Reduced the gzipped dashboard main bundle by 33.1% (163.54 kB to 109.43 kB) with React route splitting and deferred chart loading; added bounded/indexed MongoDB reads, dashboard request batching, and a load-test harness for measuring API p95 latency and throughput.
+
+## Resume Points ( * ) 
+- Full-Stack Architecture: Developed a 3-tier trading platform using React, Node.js, Express, and MongoDB featuring a live financial dashboard powered by React Context API.
+- Frontend Performance: Optimized production build with route splitting, slashing the main gzipped bundle size by 33.1% and deferring heavy chart scripts.
+- API & Database Optimization: Built a limit+1 pagination mechanism and compound indexes to prevent expensive full-collection queries and minimize database load.
+- Backend Benchmarking: Created a custom load-test harness to monitor p95/p99 latency and throughput under concurrent stress using Node.js CPU profiling.
