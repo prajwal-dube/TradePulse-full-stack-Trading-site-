@@ -4,7 +4,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "node --test test/performance.test.js test/load-test.test.js",
+    "benchmark": "node scripts/load-test.js",
+    "profile": "node --cpu-prof index.js"
   },
   "author": "prajwal",
   "license": "ISC",

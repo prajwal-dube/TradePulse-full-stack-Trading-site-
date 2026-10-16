@@ -1,34 +1,23 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import {
+  DashboardPagination,
+  DashboardDataStatus,
+  useDashboardData,
+} from "./DashboardDataContext";
 
-import axios from "axios";
-
-// import { positions } from "../data/data";
-
- 
 const Positions = () => {
-
-  const [allPositions, setAllPositions] = useState([]);
-
-useEffect(() => {
-  axios.get("/allPositions")
-    .then((res) => {
-      setAllPositions(res.data);
-    })
-    .catch((err) => {
-      console.error("Failed to load positions from local backend:", err);
-    });
-}, []);
-
-
-
+  const { data } = useDashboardData();
+  const positionsPage = data?.positions;
+  const allPositions = positionsPage?.items ?? [];
 
   return (
     <>
-      <h3 className="title">Positions ({allPositions.length})</h3>
+      <h3 className="title">Positions</h3>
+      <DashboardDataStatus />
 
       <div className="order-table">
         <table>
+          <thead>
           <tr>
             <th>Product</th>
             <th>Instrument</th>
@@ -38,7 +27,9 @@ useEffect(() => {
             <th>P&L</th>
             <th>Chg.</th>
           </tr>
+          </thead>
 
+          <tbody>
           {allPositions.map((stock, index) => {
             const curValue = stock.price * stock.qty;
             const isProfit = curValue - stock.avg * stock.qty >= 0.0;
@@ -46,7 +37,7 @@ useEffect(() => {
             const dayClass = stock.isLoss ? "loss" : "profit";
 
             return (
-              <tr key={index}>
+              <tr key={stock._id || index}>
                 <td>{stock.product}</td>
                 <td>{stock.name}</td>
                 <td>{stock.qty}</td>
@@ -59,8 +50,10 @@ useEffect(() => {
               </tr>
             );
           })}
+          </tbody>
         </table>
       </div>
+      <DashboardPagination collection="positions" pageData={positionsPage} />
     </>
   );
 };
