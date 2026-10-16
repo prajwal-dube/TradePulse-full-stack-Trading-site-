@@ -13,12 +13,18 @@ import { VerticalGraph } from "./VerticalGraph";
 
 const Holdings = () => {
   const [allHoldings, setAllHoldings] = useState([]);
+
+  
   useEffect(() => {
-    axios.get("https://api.puls3.tech/allHoldings").then((res) => {
-      // console.log(res.data);
+  axios.get("/allHoldings")
+    .then((res) => {
       setAllHoldings(res.data);
+    })
+    .catch((err) => {
+      console.error("Failed to load holdings from local backend:", err);
     });
   }, []);
+
 
 
   // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];

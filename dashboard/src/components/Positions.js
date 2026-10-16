@@ -10,12 +10,17 @@ const Positions = () => {
 
   const [allPositions, setAllPositions] = useState([]);
 
-  // Backend ( Railway ) : https://api.puls3.tech
-  useEffect(() => {
-    axios.get("https://api.puls3.tech/allPositions").then((res) => {
+useEffect(() => {
+  axios.get("/allPositions")
+    .then((res) => {
       setAllPositions(res.data);
+    })
+    .catch((err) => {
+      console.error("Failed to load positions from local backend:", err);
     });
-  },[]);
+}, []);
+
+
 
 
   return (

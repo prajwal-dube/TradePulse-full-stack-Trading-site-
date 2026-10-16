@@ -10,12 +10,24 @@ const Orders = () => {
 // https://baseline-tcp-much-nor.trycloudflare.com
 // Backend ( Railway ) : https://api.puls3.tech
 
-  useEffect(() => {
-    axios.get("https://api.puls3.tech/allOrders").then((res) => {
-      // console.log(res.data);
+useEffect(() => {
+  // 1. Fetch your stored token string
+  const token = localStorage.getItem("your_jwt_token_key");
+
+  // 2. Transmit token securely in the request header configurations
+  axios.get("http://localhost:3002/allOrders", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then((res) => {
       setAllOrders(res.data);
+    })
+    .catch((err) => {
+      console.error("Failed to load orders from local backend:", err);
     });
-  }, []);
+}, []);
+
 
   return (
     <>
