@@ -1,4 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, {
+  lazy,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+} from "react";
 
 import { Tooltip, Grow } from "@mui/material";
 
@@ -17,9 +24,11 @@ import {
 
 import GeneralContext from "./GeneralContext";   //  * Important *
 
-import { DoughnutChart } from "./DoughnoutChart";
-
-
+const DoughnutChart = lazy(() =>
+  import("./DoughnoutChart").then((module) => ({
+    default: module.DoughnutChart,
+  }))
+);
 
 const labels = watchlist.map((subArray) => subArray["name"]);
 
@@ -28,6 +37,33 @@ const labels = watchlist.map((subArray) => subArray["name"]);
 // 1st function 
 
 const WatchList = () => {
+  const chartContainerRef = useRef(null);
+  const [shouldLoadChart, setShouldLoadChart] = useState(false);
+
+  useEffect(() => {
+    const chartContainer = chartContainerRef.current;
+    if (!chartContainer) {
+      return undefined;
+    }
+
+    if (typeof IntersectionObserver === "undefined") {
+      setShouldLoadChart(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoadChart(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "150px" }
+    );
+    observer.observe(chartContainer);
+    return () => observer.disconnect();
+  }, []);
+
   const data = {
     labels,
     datasets: [
@@ -101,7 +137,13 @@ const WatchList = () => {
         })}
       </ul>
 
-      <DoughnutChart data={data} />
+      <div ref={chartContainerRef} style={{ minHeight: "240px" }}>
+        {shouldLoadChart && (
+          <Suspense fallback={<p role="status">Loading chart...</p>}>
+            <DoughnutChart data={data} />
+          </Suspense>
+        )}
+      </div>
     </div>
   );
 };

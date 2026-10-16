@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
-
-import axios from "axios";
+import React from "react";
 import { VerticalGraph } from "./VerticalGraph";
+import {
+  DashboardPagination,
+  DashboardDataStatus,
+  useDashboardData,
+} from "./DashboardDataContext";
 
 // import { holdings } from "../data/data";
 
@@ -12,27 +15,36 @@ import { VerticalGraph } from "./VerticalGraph";
 
 
 const Holdings = () => {
-  const [allHoldings, setAllHoldings] = useState([]);
-
-  
-  useEffect(() => {
-  axios.get("/allHoldings")
-    .then((res) => {
-      setAllHoldings(res.data);
-    })
-    .catch((err) => {
-      console.error("Failed to load holdings from local backend:", err);
-    });
-  }, []);
-
-
+  const { data: dashboardData } = useDashboardData();
+  const holdingsPage = dashboardData?.holdings;
+  const allHoldings = holdingsPage?.items ?? [];
+  const investment = allHoldings.reduce(
+    (total, holding) => total + holding.avg * holding.qty,
+    0
+  );
+  const currentValue = allHoldings.reduce(
+    (total, holding) => total + holding.price * holding.qty,
+    0
+  );
+  const profitLoss = currentValue - investment;
+  const profitLossPercentage = investment
+    ? (profitLoss / investment) * 100
+    : 0;
+  const isPartial =
+    (holdingsPage?.page ?? 1) > 1 || (holdingsPage?.hasNextPage ?? false);
+  const formatAmount = (amount) =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 2,
+    }).format(amount);
 
   // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
   // Adding Data to Holding Graph
   const labels = allHoldings.map((subArray) => subArray["name"]); 
 
-  const data = {
+  const chartData = {
     labels,
     datasets: [
       {
@@ -64,10 +76,12 @@ const Holdings = () => {
 
   return (
     <>
-      <h3 className="title">Holdings ({allHoldings.length})</h3>
+      <h3 className="title">Holdings</h3>
+      <DashboardDataStatus />
 
       <div className="order-table">
         <table>
+          <thead>
           <tr>
             <th>Instrument</th>
             <th>Qty.</th>
@@ -78,7 +92,9 @@ const Holdings = () => {
             <th>Net chg.</th>
             <th>Day chg.</th>
           </tr>
+          </thead>
 
+          <tbody>
           {allHoldings.map((stock, index) => {
             const curValue = stock.price * stock.qty;
             const isProfit = curValue - stock.avg * stock.qty >= 0.0;
@@ -86,7 +102,7 @@ const Holdings = () => {
             const dayClass = stock.isLoss ? "loss" : "profit";
 
             return (
-              <tr key={index} >
+              <tr key={stock._id || index}>
                 <td>{stock.name}</td>
                 <td>{stock.qty}</td>
                 <td>{stock.avg.toFixed(2)}</td>   
@@ -100,29 +116,29 @@ const Holdings = () => {
               </tr>
             );
           })}
+          </tbody>
         </table>
       </div>
+      <DashboardPagination collection="holdings" pageData={holdingsPage} />
       
 
       <div className="row">
         <div className="col">
-          <h5>
-            29,875.<span>55</span>{" "}
-          </h5>
-          <p>Total investment</p>
+          <h5>{formatAmount(investment)}</h5>
+          <p>{isPartial ? "Investment (loaded page)" : "Total investment"}</p>
+        </div>
+        <div className="col">
+          <h5>{formatAmount(currentValue)}</h5>
+          <p>{isPartial ? "Current value (loaded page)" : "Current value"}</p>
         </div>
         <div className="col">
           <h5>
-            31,428.<span>95</span>{" "}
+            {formatAmount(profitLoss)} ({profitLossPercentage.toFixed(2)}%)
           </h5>
-          <p>Current value</p>
-        </div>
-        <div className="col">
-          <h5>1,553.40 (+5.20%)</h5>
-          <p>P&L</p>
+          <p>{isPartial ? "P&L (loaded page)" : "P&L"}</p>
         </div>
       </div>
-      <VerticalGraph data={data} />
+      <VerticalGraph data={chartData} />
     </>
   );
 };

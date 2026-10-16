@@ -170,12 +170,7 @@ npm install
 npm start
 ```
 
-Server runs on:
-```
-http://localhost:3002
-```
-
----
+The backend defaults to port `8080`. The dashboard's development proxy uses port `3002`, so set `PORT=3002` in the backend environment when running both locally. The backend requires `MONGO_URL` to connect to MongoDB.
 
 ### 3️⃣ Frontend (Landing Page)
 ```bash
@@ -226,9 +221,47 @@ npm start
 
 Project Link : https://main.dij7mn1c1xwl5.amplifyapp.com/
 
+## Performance Optimization Branch
 
-## Resume Poimts
+Branch: `performance/api-throughput-optimization`
+
+This branch adds a benchmark-first performance workflow:
+
+- **Bounded database reads:** `/allHoldings`, `/allPositions`, and `/allOrders` return a maximum of 50 records by default; use `page` and `limit` to paginate, with a hard maximum of 100 records per page. These existing endpoints retain their array response shape and return next-page metadata in response headers. Fetching `limit + 1` records determines whether another page exists without running a full-collection count query.
+- **Dashboard batching:** `/dashboard-data` returns one page of holdings, positions, and orders in a single HTTP response. The dashboard loads that response once and shares it across routes; additional pages are fetched only when needed.
+- **Database query efficiency:** list queries project only displayed fields and apply stable sorting. Orders use a compound `{ createdAt: -1, _id: -1 }` index; holdings and positions sort by MongoDB's built-in `_id` index.
+- **Frontend loading:** dashboard routes are split into lazy-loaded chunks so pages such as orders, holdings, and positions do not all have to be included in the initial route bundle.
+- **Load and CPU profiling:** the backend includes a dependency-free load-test script for requests/second, p50/p95/p99 latency, response size, and errors, plus Node.js CPU profile support.
+
+### Measured frontend result
+
+In the local Create React App production build, the gzipped main JavaScript bundle changed from **163.54 kB** on the pre-optimization baseline to **109.43 kB** on this branch (**54.11 kB / 33.1% smaller**). The chart is now deferred into a **55.90 kB** gzipped chunk. This is a bundle-size measurement only; it is not a measured page-load latency or API-throughput improvement, and the deferred chunk may still be downloaded when the chart scrolls near the viewport.
+
+### Run tests and benchmarks
+
+```powershell
+npm test --prefix backend
+```
+
+Start the backend with a test MongoDB database and `PORT=3002`, then run the same benchmark settings against the baseline and optimized versions:
+
+```powershell
+$env:BASE_URL = "http://localhost:3002"
+$env:ENDPOINT = "/allHoldings?limit=100"
+$env:CONCURRENCY = "10"
+$env:DURATION_SECONDS = "15"
+$env:LABEL = "after"
+$env:RESULT_FILE = "after.json"
+npm run benchmark --prefix backend
+```
+
+The benchmark only targets loopback by default. Remote hosts require the explicit `ALLOW_REMOTE_TARGET=true` opt-in; only load-test systems you own or have permission to test. Keep the dataset, machine, endpoint, concurrency, and duration the same for both runs. The baseline implementation returns the full holdings collection, while this branch limits the page; compare the response size and p95 latency as part of that bounded-read change. The script reports measurements but does not invent a before/after comparison. No API latency or throughput improvement numbers have been recorded yet; collect and verify them before adding those claims to a resume.
+
+To capture a Node.js CPU profile, run `npm run profile --prefix backend` and stop the server with Ctrl+C; inspect the generated `.cpuprofile` in Chrome DevTools. For MongoDB, compare the endpoint's actual query with `explain("executionStats")` and check `executionTimeMillis`, `totalDocsExamined`, and `totalKeysExamined` before adding further indexes or caching. Caching is intentionally not enabled for order and holdings data because freshness requirements should be measured first.
+
+## Resume Points
 - Full-Stack Trading Platform: Built a 3-tier React/Node.js architecture with Context API for real-time state management across 10+ dashboard components.
 - Data Modeling & API: Designed structured MongoDB schemas and RESTful APIs to manage high-integrity tracking of user holdings, orders, and positions.
 - Automated Testing: Developed a comprehensive test suite using Jest and React Testing Library to ensure UI stability and prevent regressions.
 - Cloud Deployment: Deployed a high-availability frontend and dashboard using AWS Amplify, implementing automated build-and-deploy workflows via GitHub integration.
+- Performance Engineering: Reduced the gzipped dashboard main bundle by 33.1% (163.54 kB to 109.43 kB) with React route splitting and deferred chart loading; added bounded/indexed MongoDB reads, dashboard request batching, and a load-test harness for measuring API p95 latency and throughput.

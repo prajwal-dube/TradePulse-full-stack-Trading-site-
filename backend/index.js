@@ -4,6 +4,11 @@ const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require('jsonwebtoken'); // 1. Imported JWT package
+const {
+    getDashboardData,
+    getPage,
+    parsePagination,
+} = require("./performance");
 
 const PORT = process.env.PORT || 8080;
 const URL = process.env.MONGO_URL;
@@ -13,7 +18,8 @@ const app = express();
 
 app.use(cors({
     origin: "http://localhost:3000",
-    credentials: true
+    credentials: true,
+    exposedHeaders: ["X-Has-Next-Page", "X-Page", "X-Page-Size"]
 }));
 
 app.use(bodyParser.json());
@@ -50,39 +56,47 @@ app.get("/", (req, res) => {
     res.send("TradePulse backend is running");
 });
 
-//  ROUTE 1: Fetch All Stock Holdings (PROTECTED)
-app.get("/allHoldings", async (req, res) => {
+const sendCollectionPage = async (req, res, collectionName) => {
     try {
-        const holdingsData = await mongoose.connection.db.collection("holdings").find({}).toArray();
-        console.log(`[GET] /allHoldings requested by user ${req.user?.id || 'authenticated'}. Found ${holdingsData.length} documents.`);
-        res.status(200).json(holdingsData);
-    } catch (error) {
-        console.error("Error fetching holdings:", error.message);
-        res.status(500).json({ error: error.message });
-    }
-});
+        const pagination = parsePagination(req.query);
+        const page = await getPage(
+            mongoose.connection.db.collection(collectionName),
+            collectionName,
+            pagination
+        );
 
-// ROUTE 2: Fetch All Open Positions (PROTECTED)
-app.get("/allPositions", async (req, res) => {
-    try {
-        const positionsData = await mongoose.connection.db.collection("positions").find({}).toArray();
-        console.log(`[GET] /allPositions requested by user ${req.user?.id || 'authenticated'}. Found ${positionsData.length} documents.`);
-        res.status(200).json(positionsData);
+        res.set({
+            "X-Has-Next-Page": String(page.hasNextPage),
+            "X-Page": String(page.page),
+            "X-Page-Size": String(page.limit),
+        });
+        res.status(200).json(page.items);
     } catch (error) {
-        console.error("Error fetching positions:", error.message);
-        res.status(500).json({ error: error.message });
-    }
-});
+        if (error instanceof RangeError) {
+            return res.status(400).json({ error: error.message });
+        }
 
-//  ROUTE 3: Fetch All Transaction Orders (PROTECTED)
-app.get("/allOrders", async (req, res) => {
+        console.error(`Error fetching ${collectionName}:`, error.message);
+        return res.status(500).json({ error: `Failed to fetch ${collectionName}` });
+    }
+};
+
+app.get("/allHoldings", (req, res) => sendCollectionPage(req, res, "holdings"));
+app.get("/allPositions", (req, res) => sendCollectionPage(req, res, "positions"));
+app.get("/allOrders", (req, res) => sendCollectionPage(req, res, "orders"));
+
+app.get("/dashboard-data", async (req, res) => {
     try {
-        const ordersData = await mongoose.connection.db.collection("orders").find({}).toArray();
-        console.log(`[GET] /allOrders requested by user ${req.user?.id || 'authenticated'}. Found ${ordersData.length} documents.`);
-        res.status(200).json(ordersData);
+        const pagination = parsePagination(req.query);
+        const dashboardData = await getDashboardData(mongoose.connection.db, pagination);
+        res.status(200).json(dashboardData);
     } catch (error) {
-        console.error("Error fetching orders:", error.message);
-        res.status(500).json({ error: error.message });
+        if (error instanceof RangeError) {
+            return res.status(400).json({ error: error.message });
+        }
+
+        console.error("Error fetching dashboard data:", error.message);
+        return res.status(500).json({ error: "Failed to fetch dashboard data" });
     }
 });
 
@@ -110,8 +124,12 @@ app.post("/newOrder", async (req, res) => {
 mongoose.connect(URL, {
     dbName: "TradePulse" 
 })
-.then(() => {
+.then(async () => {
     console.log("Connected to MongoDB cluster securely.");
+    await mongoose.connection.db.collection("orders").createIndex(
+        { createdAt: -1, _id: -1 },
+        { name: "orders_createdAt_id_desc" }
+    );
     app.listen(PORT, () => {
         console.log(`TradePulse backend is running cleanly on port ${PORT}`);
     });
